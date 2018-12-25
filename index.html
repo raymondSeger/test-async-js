@@ -27,7 +27,6 @@
         function getPosts(){
             // pretend this is heavy
             setTimeout(function(){
-                var output = '';
                 posts.forEach(function(post, index){
                     output += `<li>${post.title}</li>`;
                 })
