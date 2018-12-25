@@ -43,7 +43,7 @@
 
                     var error = false;
                     if(error == false){
-                        resolve();
+                        resolve('value');
                     } else {
                         reject('something went wrong');
                     }
@@ -54,7 +54,8 @@
         }
 
         async function startAsyncFunc(){
-            await createPost({'title': "titleAsync", "body": "bodyAsync"});
+            var a = await createPost({'title': "titleAsync", "body": "bodyAsync"});
+            console.log(a); // return 'value'
             getPosts();
         }
         startAsyncFunc();
