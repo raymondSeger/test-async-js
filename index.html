@@ -12,10 +12,38 @@
 <body>
     <h1>Hello World</h1>
 
+    <div id="content"></div>
+
     <script>
     (function($){
 
+        var posts = [
+            {'title': 'title1', 'body': 'body1'},
+            {'title': 'title2', 'body': 'body2'},
+        ]
+
+        var output = '';
+
+        function getPosts(){
+            // pretend this is heavy
+            setTimeout(function(){
+                var output = '';
+                posts.forEach(function(post, index){
+                    output += `<li>${post.title}</li>`;
+                })
+                $('#content').html(output);
+            }, 500);
+        }
+
+        function createPost(the_post, function_to_call){
+            // let's pretend this is also heavy
+            setTimeout(function(){
+                posts.push(the_post);
+                function_to_call();
+            }, 1000);
+        }
         
+        createPost({'title': "title3", "body": "body3"}, getPosts);
 
     })(jQuery)
     </script>
