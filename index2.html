@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Test Async Javascript</title>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</head>
+<body>
+    <h1>Hello World</h1>
+
+    <div id="content"></div>
+
+    <script>
+    (function($){
+
+        var posts = [
+            {'title': 'title1', 'body': 'body1'},
+            {'title': 'title2', 'body': 'body2'},
+        ]
+
+        var output = '';
+
+        function getPosts(){
+            // pretend this is heavy
+            setTimeout(function(){
+                posts.forEach(function(post, index){
+                    output += "<li>" + post.title + "</li>";
+                })
+                $('#content').html(output);
+            }, 500);
+        }
+
+        function createPost(the_post){
+
+            return new Promise(function(resolve, reject){
+
+                // let's pretend this is also heavy
+                setTimeout(function(){
+                    posts.push(the_post);
+
+                    var error = false;
+                    if(error == false){
+                        resolve();
+                    } else {
+                        reject('something went wrong');
+                    }
+
+                }, 1000);
+
+                
+
+            })
+        }
+        
+        // way 1
+        createPost({'title': "title3", "body": "body3"}).then(function(){
+            getPosts();
+        }).catch(function(error){
+            console.log(error);
+        })
+
+        // way 2
+        createPost({'title': "title3", "body": "body3"})
+        .then(getPosts)
+        .catch(function(error){
+            console.log(error);
+        })
+
+        // promise all
+        var promise1 = Promise.resolve('result1');
+        var promise2 = 10;
+        var promise3 = new Promise(function(resolve, reject){
+            setTimeout(resolve, 2000, 'Promise3 result');
+        });
+        var promiseFail = Promise.reject('fail promise');
+        
+        // one of the promise fail, won't run the then()
+        Promise.all([promise1, promise2, promise3, promiseFail]).then(function(values){
+            console.log(values);
+        });
+
+        Promise.all([promise1, promise2, promise3]).then(function(values){
+            console.log(values);
+        });
+
+    })(jQuery)
+    </script>
+
+</body>
+</html>
